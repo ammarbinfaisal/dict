@@ -6,11 +6,17 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-color: #fff;
+  height: 100vh;
 }
 
 *{
-  margin: 4px;
+  margin: 0;
   padding: 0;
+}
+
+span{
+  margin: 0;
 }
 
 code {
