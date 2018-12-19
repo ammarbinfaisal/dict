@@ -5,7 +5,6 @@
     align-items: center;
 }
 
-
 .flexrow{
     display: flex;
     justify-content: center;
@@ -23,7 +22,12 @@
     margin: 8vh;
 }
 
-#word-definition{
+h3{
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.word-definition{
     width: 90%;
     margin: 4vh auto;
     max-width: 550px;
@@ -37,7 +41,11 @@
 
 .monospace{
     font-size: calc(.3vw + .4vh + .9em);
-    font-family: monospace;
+    font-family: 'Ubuntu mono', monospace;
+}
+
+.monospace > *{
+    display: inline;
 }
 
 .no-lateral-margin > *{
@@ -45,12 +53,11 @@
     margin-right: 0;
 }
 
-.part-of-speech > *{
-    margin: 4vh 0
+.part-of-speech{
+    margin: 3vh 0
 }
 
 .part-of-speech ol {
-    width: 90%;
     margin: auto;
 }
 
@@ -68,7 +75,9 @@
 }
 
 .part-of-speech ol li{
-    margin: 20px;
+    margin-top: 2vh;
+    margin-bottom: 2.5vh;
+    margin-left: 20px;
 }
 
 /* styling input */
