@@ -9,8 +9,7 @@ class App extends Component {
     this.state = {};
   }
   handleWordInput(event) {
-    if (event)
-      event.preventDefault();
+    event.stopPropagation();
     this.setState({ loading: true, reqFailed: false, data: undefined });
     let word = document.querySelector("#word-input").value;
     fetch(
@@ -19,7 +18,7 @@ class App extends Component {
       .then(res => res.json())
       .then(dataReceived => {
         console.log(dataReceived);
-        this.setState({ data: dataReceived[0], loading: false, reqFailed: false });
+        this.setState({ data: dataReceived.length === 0 ? dataReceived[0] : dataReceived, loading: false, reqFailed: false });
       })
       .catch(err => {
         console.log("Request failed perhasp due to wrong spelling");
@@ -28,12 +27,25 @@ class App extends Component {
     // .then(res => this.setState({ wordData: res[0] }));
   }
   render() {
-    let meanings = [], i = 0;
-    if (this.state.data)
-      for (let figureOfSpeech in this.state.data.meaning) {
-        meanings[i] = <FSG name={figureOfSpeech} data={this.state.data.meaning[figureOfSpeech]} key={i} define={this.handleWordInput.bind(this)} />;
-        i++;
+    let meanings = [];
+    if (this.state.data) {
+      if (this.state.data.length > 0) {
+        this.state.data.forEach((word, i) => {
+          let j = 0;
+          for (let figureOfSpeech in this.state.data.meaning) {
+            meanings[i][j] = <FSG name={figureOfSpeech} data={this.state.data.meaning[figureOfSpeech]} key={i} define={this.handleWordInput.bind(this)} />;
+            j++;
+          }
+        });
       }
+      else {
+        let i = 0;
+        for (let figureOfSpeech in this.state.data.meaning) {
+          meanings[i] = <FSG name={figureOfSpeech} data={this.state.data.meaning[figureOfSpeech]} key={i} define={this.handleWordInput.bind(this)} />;
+          i++;
+        }
+      }
+    }
     return (
       <div className="columns">
         <WordInput onInput={this.handleWordInput.bind(this)} />
@@ -41,19 +53,36 @@ class App extends Component {
         {
           this.state.data !== undefined && !this.state.reqFailed ?
             (
-              <section id="word-definition">
-                <h2>{this.state.data.word}</h2>
-                <p className="monospace">{this.state.data.phonetic}</p>
-                {meanings}
-              </section>
+              this.state.data.length === 0
+                ?
+                (
+                  <section className="word-definition">
+                    <h2>{this.state.data.word}</h2>
+                    <p className="monospace">{this.state.data.phonetic}</p>
+                    {meanings}
+                  </section>
+                )
+                :
+                (
+                  this.state.data.map((word, i) =>
+                    (
+                      <section className="word-definition" key={i}>
+                        <h2>{word.word}</h2>
+                        <p className="monospace">{word.phonetic}</p>
+                        {meanings[i]}
+                      </section>
+                    )
+                  )
+                )
             ) :
+
             <></>
         }
         {
           this.state.loading ? <p id="loading" className="monospace">loading...</p> : <></>
         }
         {
-          this.state.reqFailed ? <p className="monospace error">⚠️ Sorry couldn&apos;t fetch definition of the word.<br /> Either the spelling is wrong or you aren&apos;
+          this.state.reqFailed ? <p className="monospace error"><span role="img" aria-label="warning">⚠️</span> Sorry couldn&apos;t fetch definition of the word.<br /> Either the spelling is wrong or you aren&apos;
 t connected to internet</p> : <></>
         }
       </div>
