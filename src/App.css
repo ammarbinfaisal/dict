@@ -30,12 +30,12 @@ h3{
 .word-definition{
     width: 90vw;
     margin: 4vh auto;
-    max-width: 600px;
+    max-width: 380px;
 }
 
 @media (min-width: 800px){
     #word-definition{
-        width: 60%;
+        max-width: 600px;
     }
 }
 

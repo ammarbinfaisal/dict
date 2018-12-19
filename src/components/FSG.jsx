@@ -4,11 +4,22 @@ class FSG extends PureComponent {
   componentDidCatch(error, info) {
     console.log(error, info);
   }
+  handleClick(event) {
+    if (event.target.tagName === "SPAN") {
+      let word = event.target.innerText, len = word.length;
+      if (word.indexOf(" ") === -1) {
+        if (/\.|,|;/.test(word[len - 1]))
+          word = word.substring(len - 2);
+        document.querySelector("#word-input").value = word;
+        this.props.define(event);
+      }
+    }
+  }
   render() {
     return (
       <section id={this.props.name} className="part-of-speech">
         <h3>{this.props.name}</h3>
-        <ol onClick={(event) => { if (event.target.tagName === "SPAN") { document.querySelector("#word-input").value = event.target.innerText; this.props.define(event) } }}>
+        <ol onClick={this.handleClick.bind(this)}>
           {this.props.data.map((el, i) => (
             el.definition
               ?
