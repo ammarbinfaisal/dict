@@ -9,8 +9,7 @@ class App extends Component {
     this.state = {};
   }
   handleWordInput(event) {
-    if (event)
-      event.preventDefault();
+    event.stopPropagation();
     this.setState({ loading: true, reqFailed: false, data: undefined });
     let word = document.querySelector("#word-input").value;
     fetch(
@@ -41,7 +40,7 @@ class App extends Component {
         {
           this.state.data !== undefined && !this.state.reqFailed ?
             (
-              <section id="word-definition">
+              <section className="word-definition">
                 <h2>{this.state.data.word}</h2>
                 <p className="monospace">{this.state.data.phonetic}</p>
                 {meanings}
@@ -53,7 +52,7 @@ class App extends Component {
           this.state.loading ? <p id="loading" className="monospace">loading...</p> : <></>
         }
         {
-          this.state.reqFailed ? <p className="monospace error">⚠️ Sorry couldn&apos;t fetch definition of the word.<br /> Either the spelling is wrong or you aren&apos;
+          this.state.reqFailed ? <p className="monospace error"><span role="img" aria-label="warning">⚠️</span> Sorry couldn&apos;t fetch definition of the word.<br /> Either the spelling is wrong or you aren&apos;
 t connected to internet</p> : <></>
         }
       </div>
