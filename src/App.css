@@ -28,9 +28,9 @@ h3{
 }
 
 .word-definition{
-    width: 90%;
+    width: 90vw;
     margin: 4vh auto;
-    max-width: 550px;
+    max-width: 600px;
 }
 
 @media (min-width: 800px){
