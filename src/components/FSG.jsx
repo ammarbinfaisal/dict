@@ -1,4 +1,8 @@
 import React, { PureComponent } from "react";
+import flatten from "array-flatten";
+
+const insertSpans = text => text.split(" ").map(x => " <span>" + x + "</span> ").join("");
+const splitSynonyms = synonyms => flatten(synonyms.map(x => x.split(" ").map(x => " <span>" + x + "</span>").join(" "))).map(x => x.indexOf("span") === "-" ? " <span>" + x + "</span>" : x).join(",")
 
 class FSG extends PureComponent {
   componentDidCatch(error, info) {
@@ -9,7 +13,7 @@ class FSG extends PureComponent {
       let word = event.target.innerText, len = word.length;
       if (word.indexOf(" ") === -1) {
         if (/\.|,|;/.test(word[len - 1]))
-          word = word.substring(len - 2);
+          word = word.substring(0, len - 1);
         document.querySelector("#word-input").value = word;
         this.props.define(event);
       }
@@ -25,9 +29,9 @@ class FSG extends PureComponent {
               ?
               (
                 <li key={i}>
-                  <p className="definition" dangerouslySetInnerHTML={{ __html: el.definition.split(" ").map(x => " <span>" + x + "</span> ").join("") }}></p>
-                  <em className="examples" dangerouslySetInnerHTML={{ __html: el.example ? el.example.split(" ").map(x => " <span>" + x + "</span> ").join("") : "" }}></em>
-                  {el.synonyms ? <><div className="synonyms monospace"><b>Synonyms: </b><p dangerouslySetInnerHTML={{ __html: el.synonyms.map(x => " <span>" + x + "</span>").join(",") }}></p></div></> : <></>}
+                  <p className="definition" dangerouslySetInnerHTML={{ __html: el.definition ? insertSpans(el.definition) : "" }}></p>
+                  <em className="examples" dangerouslySetInnerHTML={{ __html: el.example ? insertSpans(el.example) : "" }}></em>
+                  {el.synonyms ? <><div className="synonyms monospace"><b>Synonyms: </b><p dangerouslySetInnerHTML={{ __html: splitSynonyms(el.synonyms)}}></p></div></> : <></>}
                   {/* <p className="synonyms">{el.synonyms.join(", ")}</p> */}
                 </li>
               )
